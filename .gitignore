@@ -1,3 +1,8 @@
+target/
+.m2/
+
+.ash_history
+
 # Compiled class file
 *.class
 

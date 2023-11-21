@@ -1,0 +1,72 @@
+name: First Release 🌱
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  env:
+    uses: devxp-tech/.github/.github/workflows/env.yaml@main
+
+  test:
+    uses: devxp-tech/.github/.github/workflows/test.yaml@main
+
+  quality-gate:
+    uses: devxp-tech/.github/.github/workflows/sonarqube.yaml@main
+    secrets: inherit
+
+  docs:
+    uses: devxp-tech/.github/.github/workflows/techdocs.yaml@main
+    secrets: inherit
+    with:
+      repository: ${{ needs.env.outputs.repository }}
+    needs:
+      - env
+
+  build-and-push:
+    uses: devxp-tech/.github/.github/workflows/build-and-push.yaml@main
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+    needs:
+      - env
+      - test
+      - quality-gate
+
+  security-gateway:
+    uses: devxp-tech/.github/.github/workflows/trivy.yaml@main
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+    needs:
+      - env
+      - build-and-push
+
+  deploy:
+    uses: devxp-tech/.github/.github/workflows/deploy.yaml@main
+    secrets: inherit
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+      repository: ${{ needs.env.outputs.repository }}
+      url: https://${{ needs.env.outputs.repository }}.devxp-tech.io
+      environment: development
+    needs:
+      - env
+      - security-gateway
+
+  promote:
+    uses: devxp-tech/.github/.github/workflows/promote.yaml@main
+    secrets: inherit
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+      repository: ${{ needs.env.outputs.repository }}
+      url: https://${{ needs.env.outputs.repository }}.devxp-tech.io
+      environment: production
+    needs:
+      - env
+      - deploy
+
+  notify:
+    uses: devxp-tech/.github/.github/workflows/notify.yaml@main
+    if: always()
+    secrets: inherit
+    needs:
+      - promote

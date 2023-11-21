@@ -1,0 +1,33 @@
+name: Main 🚀
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+      - 'mkdocs.yml'
+      - catalog-info.yaml
+      - 'docs/**'
+
+jobs:
+  env:
+    uses: devxp-tech/.github/.github/workflows/env.yaml@main
+
+  promote:
+    uses: devxp-tech/.github/.github/workflows/promote.yaml@main
+    secrets: inherit
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+      repository: ${{ needs.env.outputs.repository }}
+      url: https://${{ needs.env.outputs.repository }}.devxp-tech.io
+      environment: production
+    needs:
+      - env
+
+  notify:
+    uses: devxp-tech/.github/.github/workflows/notify.yaml@main
+    if: always()
+    secrets: inherit
+    needs:
+      - promote

@@ -1,0 +1,24 @@
+# application.yaml
+
+spring:
+  application:
+    name: template-java
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Expose all endpoints, you can customize this if needed
+  endpoint:
+    health:
+      show-details: always
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true # Enable Prometheus metrics endpoint
+
+# Additional Actuator-specific configuration can be added here

@@ -1,9 +1,9 @@
 # Layer de Dev (JDK para Desenvolver)
 FROM openjdk:17.0.1-jdk-slim as base
 
-RUN apk update && apk upgrade
-RUN apk add maven
-RUN apk add git
+RUN apt update && apt upgrade
+RUN apt add maven
+RUN apt add git
 
 
 FROM base as ci

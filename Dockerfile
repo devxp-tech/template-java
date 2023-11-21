@@ -1,4 +1,15 @@
-FROM adoptopenjdk/openjdk11:jre-11.0.11_9-alpine
+FROM maven:3.8.7-openjdk-18-slim as base
 
-ADD target/template-java-*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM base as ci
+WORKDIR /app
+COPY . .
+
+FROM ci as builder
+WORKDIR /app
+RUN mvn package -Dmaven.test.skip=true
+
+FROM builder as shipment
+WORKDIR /app
+COPY --from=builder /app/target/template-java.jar .
+
+ENTRYPOINT ["java","-jar", "/app/template-java.jar"]

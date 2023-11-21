@@ -1,17 +1,22 @@
 version: '3.8'
 services:
-  ci: &defaults
+  test: &defaults
     build:
-      context: ./
-      dockerfile: Dockerfile
-    image: maven:3.8.1
+      context: .
+      target: base
     working_dir: /app
+    command: mvn test
+    ports: 
+      - 8080:8080
     volumes:
       - .:/app
-    ports: 
-        - 8080:8080
-    command: mvn clean package
 
   app:
     <<: *defaults
-    command: java -jar /app/app.jar
+    build:
+      context: .
+      target: builder
+    command: mvn spring-boot:run
+    # command: java -jar target/template-java-spring-boot.jar
+    environment:
+      - JAVA_OPTS=-Dserver.port=8080

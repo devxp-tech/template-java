@@ -1,13 +1,17 @@
-version: '3'
+version: '3.8'
 services:
+  ci: &defaults
     build:
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        image: maven:3.8.1
-        working_dir: /app
-        volumes:
-            - .:/app
-        ports: 
-            - 8080:8080
-        command: mvn clean spring-boot:run
+      context: ./
+      dockerfile: Dockerfile
+    image: maven:3.8.1
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports: 
+        - 8080:8080
+    command: mvn clean package
+
+  app:
+    <<: *defaults
+    command: java -jar /app/app.jar

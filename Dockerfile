@@ -1,5 +1,5 @@
 # Layer de Dev (JDK para Desenvolver)
-FROM openjdk:17-jdk-alpine as base
+FROM openjdk:17.0.1-jdk-slim as base
 
 RUN apk update && apk upgrade
 RUN apk add maven

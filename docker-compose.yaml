@@ -1,19 +1,13 @@
-version: '3.2'
+version: '3'
 services:
-  app: &defaults
     build:
-      context: .
-      # target: 
-    working_dir: /app/
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/app/      
-
-  # include all information in test and
-  # add the command to run
-  test:
-   <<: *defaults
-   command: go run main.go
-   ports:
-      - 8080:80 # ***update value here
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: maven:3.8.1
+        working_dir: /app
+        volumes:
+            - .:/app
+        ports: 
+            - 8080:8080
+        command: mvn clean spring-boot:run

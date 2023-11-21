@@ -1,13 +1,13 @@
-package com.manjanelli.healthcheck;
+package com.devxptech.templatejava;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class app {
+public class TemplateJavaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(app.class, args);
+		SpringApplication.run(TemplateJavaApplication.class, args);
 	}
 
 }

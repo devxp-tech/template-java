@@ -1,0 +1,63 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  shutdown: graceful
+
+spring:
+  liquibase:
+    change-log: classpath:liquibase/migrations.yaml
+  main:
+    banner-mode: off
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties.hibernate:
+      jdbc.lob.non_contextual_creation: true
+      jdbc.batch_size: 50
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+datasource:
+  name: ${DB_NAME:db_template}
+  host: ${DB_HOST:localhost:5432}
+  username: ${DB_USER:root}
+  password: ${DB_PASSWORD:root}
+
+springdoc:
+  api-docs:
+    enabled: ${ENABLE_OPENAPI:true}
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+cloud:
+  aws:
+    stack:
+      enabled: false
+    rds:
+      enabled: false
+    elasticache:
+      enabled: false
+    region:
+      static: us-east-1
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:x}
+      secret-key: ${AWS_SECRET_KEY:x}
+    sns:
+      endpoint: ${AWS_SNS_ENDPOINT:http://localhost:4566}
+    sqs:
+      endpoint: ${AWS_SQS_ENDPOINT:http://localhost:4566}
+
+# APP ENVIRONMENT
+app:
+  name: template
+  environment: ${ENVIRONMENT:local}
+  security:
+    jwt-secret: ${JWT_SECRET:secret}
+    jwt-expiration-time-minutes: ${JWT_EXPIRATION_TIME_MINUTES:30}
+    api-user-name: ${API_USER:user}
+    api-pass: ${API_PASSWORD:password}
+  external:
+    google:
+      host: ${GOOGLE_HOST:http://localhost:5000}
+

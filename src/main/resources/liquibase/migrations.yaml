@@ -1,0 +1,6 @@
+databaseChangeLog:
+
+  - include:
+      - file: liquibase/changeset_001.yaml
+  - include:
+      - file: liquibase/changeset_002.yaml

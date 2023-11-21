@@ -1,0 +1,28 @@
+version: '3'
+services:
+
+  template-postgres:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=db_template
+
+  template-aws:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sns,sqs
+    volumes:
+      - ./scripts/aws:/docker-entrypoint-initaws.d
+
+  template-mock:
+    image: rodolpheche/wiremock:2.28.1-alpine
+    ports:
+    - "5000:8080"
+    - "8443:8443"
+    volumes:
+    - ${PWD}/mock:/home/wiremock

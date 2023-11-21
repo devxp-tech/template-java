@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: devxp-tech
+      changes:
+        - sql:
+            sql: insert into user_sample_table(id,user_document_number,info,created_at) values ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), '91630742066',  '{"name":"name1", "email":"email1@email.com"}', now())
+        - sql:
+            sql: insert into user_sample_table(id,user_document_number,info,created_at) values ((SELECT md5(random()::text || clock_timestamp()::text)::uuid), '46730734019',  '{"name":"name2", "email":"email2@email.com"}', now())

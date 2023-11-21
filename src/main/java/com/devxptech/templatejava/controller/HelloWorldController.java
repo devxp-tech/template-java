@@ -1,6 +1,5 @@
 package com.devxptech.templatejavaspringboot.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +15,16 @@ public class HelloWorldController {
     @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> helloWorld() {
 
-        return new ResponseEntity<>("Funcionou", HttpStatus.OK );
+        return new ResponseEntity<>("Hello world for your app template-java", HttpStatus.OK);
     }
+
     @GetMapping(path = "/{param}")
     public ResponseEntity<?> helloWorldParam(@PathVariable Integer param) {
 
-        if(param == 1 )
-        {
-            return new ResponseEntity<>("Funcionou", HttpStatus.OK );
-        }else{
-            return new ResponseEntity<>("Diferente de 1 ", HttpStatus.BAD_REQUEST );
+        if (param == 1) {
+            return new ResponseEntity<>("Funcionou", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Diferente de 1 ", HttpStatus.BAD_REQUEST);
         }
 
     }

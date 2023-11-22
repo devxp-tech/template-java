@@ -15,15 +15,18 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
-        <sonar.projectName>template-java</sonar.projectName>
-        <sonar.projectVersion>1.0</sonar.projectVersion>
+        <sonar.organization>devxp-tech</sonar.organization>
+        <sonar.host.url>https://http://sonar.devxp-tech.io</sonar.host.url>
+        <sonar.projectName>production-ready-microservices-starter</sonar.projectName>
+        <sonar.language>java</sonar.language>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.sources>src/main/java</sonar.sources>
-        <sonar.java.binaries>target</sonar.java.binaries>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <sonar.projectVersion>1.0</sonar.projectVersion>
-        <sonar.sources>src/main/java</sonar.sources>
-        <sonar.java.binaries>target</sonar.java.binaries>	
+        <sonar.binaries>target/classes</sonar.binaries>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.jacoco.reportPaths>
+            ${project.build.directory}/jacoco.exec,
+            ${project.build.directory}/jacoco-it.exec
+        </sonar.jacoco.reportPaths>
 	</properties>
 	<dependencies>
 		<dependency>

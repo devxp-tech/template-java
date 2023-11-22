@@ -19,10 +19,10 @@ RUN mvn package -Dmaven.test.skip=true
 FROM builder as shipment
 # FROM gcr.io/distroless/java:11 as production
 WORKDIR /app
-COPY --from=builder /app/target/app.jar .
+COPY --from=builder /app/target/template-java.jar .
 
 # Application port (optional)
 EXPOSE 8080
 
 # Container start command for production
-ENTRYPOINT ["java","-jar", "/app/app.jar"]
+ENTRYPOINT ["java","-jar", "/app/template-java.jar"]

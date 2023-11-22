@@ -13,26 +13,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>template-java</name>
 	<description>Demo project for Spring Boot</description>
-
-	<profiles>
-		<profile>
-			<id>sonar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<sonar.host.url>https://sonar.devxp-tech.io</sonar.host.url>
-				<sonar.verbose>true</sonar.verbose>
-				<sonar.login>${env.SONAR_TOKEN}</sonar.login>
-			</properties>
-		</profile>
-	</profiles>
-
 	<properties>
 		<java.version>17</java.version>
-
-
-
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,16 +50,7 @@
 					</image>
 				</configuration>
 			</plugin>
-		</plugins>
-		<pluginManagement>
-		<plugins>
-			<plugin>
-			<groupId>org.sonarsource.scanner.maven</groupId>
-			<artifactId>sonar-maven-plugin</artifactId>
-			<version>3.2</version>
-			</plugin>
-		</plugins>
-		</pluginManagement>		
+		</plugins>	
 	</build>
 
 </project>

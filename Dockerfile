@@ -16,8 +16,8 @@ RUN mvn package -Dmaven.test.skip=true
 ################ Production ################
 # Creates a minimal image for production using distroless base image
 # More info here: https://github.com/GoogleContainerTools/distroless
-# FROM builder as shipment
-FROM gcr.io/distroless/java:11 as production
+FROM builder as shipment
+# FROM gcr.io/distroless/java:11 as production
 WORKDIR /app
 COPY --from=builder /app/target/app.jar .
 

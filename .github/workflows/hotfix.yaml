@@ -1,0 +1,90 @@
+name: HotFix 🔥
+
+on:
+  push:
+    branches:
+      - 'hotfix/**'
+    paths-ignore:
+      - README.md
+      - catalog-info.yaml
+      - 'docs/**'
+
+jobs:
+  env:
+    uses: devxp-tech/.github/.github/workflows/env.yaml@main
+
+  test:
+    uses: devxp-tech/.github/.github/workflows/test.yaml@main
+
+  quality-gate:  
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Cache SonarQube packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2      
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=devxp-tech_template-java_AYv2pdAkrzkI6H_lpdqk -Dsonar.projectName='template-java'
+
+  # quality-gate:
+  #   uses: devxp-tech/.github/.github/workflows/sonarqube.yaml@main
+  #   secrets: inherit
+
+  code-scan:
+    uses: devxp-tech/.github/.github/workflows/synk-golang.yaml@main
+    secrets: inherit
+
+  build-and-push:
+    uses: devxp-tech/.github/.github/workflows/build-and-push.yaml@main
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+    needs:
+      - env
+      - test
+      - quality-gate
+      - code-scan
+
+  security-gateway:
+    uses: devxp-tech/.github/.github/workflows/trivy.yaml@main
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+    needs:
+      - env
+      - build-and-push
+
+  deploy:
+    uses: devxp-tech/.github/.github/workflows/deploy.yaml@main
+    secrets: inherit
+    with:
+      tag: ${{ needs.env.outputs.tag }}
+      repository: ${{ needs.env.outputs.repository }}
+      url: https://${{ needs.env.outputs.repository }}.devxp-tech.io
+      environment: development
+    needs:
+      - env
+      - security-gateway
+
+  notify:
+    uses: devxp-tech/.github/.github/workflows/notify.yaml@main
+    if: always()
+    secrets: inherit
+    needs:
+      - deploy

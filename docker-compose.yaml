@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  test: &defaults
+    build:
+      context: .
+      target: base
+    working_dir: /app
+    command: mvn test
+    ports: 
+      - 8080:8080
+    volumes:
+      - .:/app
+
+  app:
+    <<: *defaults
+    build:
+      context: .
+      target: builder
+    command: mvn spring-boot:run
+    # command: java -jar target/template-java-spring-boot.jar
+    environment:
+      - JAVA_OPTS=-Dserver.port=8080

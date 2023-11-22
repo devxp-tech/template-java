@@ -1,0 +1,4 @@
+varsEncrypted: true
+lastContext:
+    namespace: template-java
+    context: docker-desktop

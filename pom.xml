@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.devxp-tech</groupId>
-	<artifactId>template-java</artifactId>
+	<artifactId>app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>template-java</name>
 	<description>Demo project for Spring Boot</description>

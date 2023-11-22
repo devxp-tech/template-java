@@ -3,7 +3,7 @@ name: template-java
 
 # `vars` specifies variables which may be used as ${VAR_NAME} in devspace.yaml
 vars:
-  IMAGE: ghcr.io/devxp-tech/template-java:7df51a75 #:devspace
+  IMAGE: ghcr.io/devxp-tech/template-java
 
 pipelines:
   # Override the default pipeline for 'devspace dev'
@@ -16,13 +16,13 @@ pipelines:
 # This is a list of `images` that DevSpace can build for this project
 # We recommend to skip image building during development (devspace dev) as much as possible
 images:
-  template-java:
+  app:
     image: ${IMAGE}
     dockerfile: ./Dockerfile
 
 # This is a list of `deployments` that DevSpace can create for this project
 deployments:
-  template-java:
+  app:
     helm:
       chart:
         name: devxp-dev
@@ -37,37 +37,33 @@ deployments:
           limits:
             cpu: "200m"
             memory: "512Mi"
-        envs:
-          - name: SERVICE_NAME
-            value: "template-java"
-          - name: INSECURE_MODE
-            value: "true"
-          - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: opentelemetry-collector.tracing.svc.cluster.local:4317
 
 # This is a list of `dev` containers that are based on the containers created by your deployments
 dev:
-  template-java:
+  app:
     # Search for the container that runs this image
     imageSelector: ${IMAGE}
     # Replace the container image with this dev-optimized image (allows to skip image building during development)
-    devImage: ghcr.io/loft-sh/devspace-containers/go:1.18-alpine
+    # devImage: ghcr.io/loft-sh/devspace-containers/go:1.18-alpine
     logs: {}
     command:
-      - go
-      - run
-      - main.go
+      - mvn spring-boot:run
     # Sync files between the local filesystem and the development container
     sync:
       - path: ./:/app
         uploadExcludeFile: .dockerignore
         excludePaths:
-          - "**"
-          - "!**/*.go"
-          - "!go.mod"
-          - "!go.sum"
+          - .git/
+        uploadExcludePaths:
+          - Dockerfile
+          - target/
         onUpload:
-          restartContainer: true
+          execRemote:
+            onBatch:
+              command: sh
+              args:
+                - -c
+                - mvn compile >>/dev/pts/0 || exit 0
     # Forward the following ports to be able access your application via localhost
     ports:
       - port: 23450:2345

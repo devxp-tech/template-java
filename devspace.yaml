@@ -3,6 +3,7 @@ name: template-java
 
 # `vars` specifies variables which may be used as ${VAR_NAME} in devspace.yaml
 vars:
+  # IMAGE: maven:3.8.4-eclipse-temurin-16
   IMAGE: ghcr.io/devxp-tech/template-java
 
 pipelines:
@@ -44,26 +45,21 @@ dev:
     # Search for the container that runs this image
     imageSelector: ${IMAGE}
     # Replace the container image with this dev-optimized image (allows to skip image building during development)
-    # devImage: ghcr.io/loft-sh/devspace-containers/go:1.18-alpine
-    logs: {}
-    # command:
-    #   - mvn spring-boot:run
+    devImage: ghcr.io/loft-sh/devspace-containers/java-maven:3-openjdk-17-slim
     # Sync files between the local filesystem and the development container
+    workingDir: /src
     sync:
-      - path: ./:/app
-        uploadExcludeFile: .dockerignore
+      - path: .:/src
         excludePaths:
           - .git/
         uploadExcludePaths:
           - Dockerfile
           - target/
-        onUpload:
-          execRemote:
-            onBatch:
-              command: sh
-              args:
-                - -c
-                - mvn compile >>/dev/pts/0 || exit 0
+          - .git/
+          - target/
+    terminal:
+      command: mvn spring-boot:run
+
     # Forward the following ports to be able access your application via localhost
     ports:
       - port: 23450:2345

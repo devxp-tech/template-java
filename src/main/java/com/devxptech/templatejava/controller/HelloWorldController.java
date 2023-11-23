@@ -1,4 +1,4 @@
-package com.devxptech.templatejavaspringboot.controller;
+package com.devxptech.templatejava.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +22,7 @@ public class HelloWorldController {
     public ResponseEntity<?> helloWorldParam(@PathVariable Integer param) {
 
         if (param == 1) {
-            return new ResponseEntity<>("Funcionou", HttpStatus.OK);
+            return new ResponseEntity<>("Hello world for your app template-java", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Diferente de 1 ", HttpStatus.BAD_REQUEST);
         }

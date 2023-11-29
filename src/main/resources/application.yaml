@@ -19,6 +19,8 @@ management:
       enabled: true
 
   metrics:
+    tags:
+      application: ${spring.application.name}
     export:
       prometheus:
         enabled: true # Enable Prometheus metrics endpoint
